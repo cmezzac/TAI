@@ -1,3 +1,4 @@
+
 import OpenAI from "openai";
 import fs from "fs";
 import dotenv from 'dotenv';
@@ -78,3 +79,4 @@ async function addFileToVectorStoreFiles(vectorStoreId, fileId) {
 }
 
 export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus}
+
