@@ -4,8 +4,8 @@ import "./App.css";
 export default function App() {
   return (
     <div className="App">
-      {/* Left Sidebar */}
-      <div className="left-sidebar">
+      {/* Right Sidebar */}
+      <div className="right-sidebar">
         <div className="small-box">
           <h3>Hi I'm TAI, your learning assistant</h3>
         </div>
