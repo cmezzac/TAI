@@ -1,12 +1,13 @@
 .App {
   display: flex;
   height: 100vh;
+  flex-direction: row-reverse; /* Moves the sidebar to the right */
 }
 
-.left-sidebar {
+.right-sidebar {
   width: 25%;
   padding: 16px;
-  border-right: 1px solid #dcdfe4;
+  border-left: 1px solid #dcdfe4; /* Change to left border since it's now on the right */
   display: flex;
   flex-direction: column;
 }
@@ -47,8 +48,6 @@
   font-size: 16px;
   background-color: #dcdfe4;
 }
-
-
 
 .main-content {
   flex: 1;
