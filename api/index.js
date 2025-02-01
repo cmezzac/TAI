@@ -33,14 +33,14 @@ let vectorStore = await getOrCreateVectorStore();
 console.log("This is the vector store object: ", vectorStore, "\n");
 
 const fileId = await prepFiles("test.txt");
-const threadMsg = await makeThreadMessage("A list of words", thread.id, fileId);
-console.log("This is the threadMsg object: ", threadMsg, "\n");
-
-await addFileToVectorStoreFiles(vectorStore.id);
+await addFileToVectorStoreFiles(vectorStore.id, fileId);
 
 const {assistant, thread} = await initOpenAi(vectorStore.id);
 console.log("This is the assistant object: ", assistant, "\n");
 console.log("This is the thread object: ", thread, "\n");
+
+const threadMsg = await makeThreadMessage("A list of words", thread.id, fileId);
+console.log("This is the threadMsg object: ", threadMsg, "\n");
 
 // const prompt = await makePromptReq(assistant.id, thread.id, "return all words from the file that start with an H")
 // console.log("This is the prompt request: ", prompt, "\n");

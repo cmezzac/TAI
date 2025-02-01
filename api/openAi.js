@@ -67,15 +67,14 @@ async function getOrCreateVectorStore() {
   const vectorStores = await openai.beta.vectorStores.list();
   console.log('Vector Stores:', vectorStores);
   return (vectorStores.data.length === 0) ? await openai.beta.vectorStores.create({ name: 'TAI_Vector_Store' })
-                                          : await openai.beta.vectorStores.retrieve(vectorStores[0]);
+                                          : await openai.beta.vectorStores.retrieve(vectorStores.data[0].id);
 }
 
 async function addFileToVectorStoreFiles(vectorStoreId, fileId) {
   await openai.beta.vectorStores.files.create(vectorStoreId, {
     file_id: fileId
   });
-  const files = await openai.beta.vectorStores.files.list(vectorStore.id);
-  console.log('Files in Vector Store:', files);
+  const files = await openai.beta.vectorStores.files.list(vectorStoreId);
 }
 
 export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus}
