@@ -3,6 +3,23 @@ import "./App.css";
 import PdfViewer from "./components/PdfViewer";
 
 export default function App() {
+
+  const handleTeacherClick = () => {
+    console.log("Teacher button clicked");
+  };
+
+  const handleStudentClick = () => {
+    console.log("Student button clicked");
+  };
+
+  const handleStartRecording = () => {
+    console.log("Start Recording button clicked");
+  };
+
+  const handleUploadDocument = () => {
+    console.log("Upload Document button clicked");
+  };
+
   return (
     <div className="App">
       {/* Right Sidebar */}
@@ -20,9 +37,10 @@ export default function App() {
       {/* Main Content */}
       <div className="main-content">
         <div className="button-group">
-          <button className="btn">Teacher</button>
-          <button className="btn">Student</button>
-          <button className="btn btn-red">Start Recording</button>
+          <button className="btn" onClick={handleTeacherClick}>Teacher</button>
+          <button className="btn" onClick={handleStudentClick}>Student</button>
+          <button className="btn btn-green" onClick={handleStartRecording}>Start Recording</button>
+          <button className="btn btn-red" onClick={handleUploadDocument}>Upload Document</button>
         </div>
         <div className="content-box">
           <PdfViewer />

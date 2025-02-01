@@ -85,6 +85,14 @@
   background-color: #cc0000;
 }
 
+.btn-green {
+  background-color: #28a745;
+}
+
+.btn-green:hover {
+  background-color: #218838;
+}
+
 .content-box {
   background-color: #dcdfe4;
   flex: 1;
