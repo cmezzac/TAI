@@ -22,31 +22,31 @@ async function PrepFiles(filePath, purpose="assistants") {
         file: fs.createReadStream(filePath),
         purpose: purpose,
     });
+
+    return file.id;
 }
 
-async function MakeOpenAiPrompt(promptMsg) {
-    await openai.beta.threads.messages.create(
-        (thread_id = thread.id),
+async function MakeThreadMessage(content, fileId) {
+    return await openai.beta.threads.messages.create(
+        (threadId = thread.id),
         {
           role: "user",
-          content: promptMsg,
-          file_ids: [file.id],
+          content: content,
+          file_ids: fileId,
         }
     );
 }
 
-async function AddToOpenaiThread(file) {
-    await openai.beta.threads.messages.create(
-        (thread_id = thread.id),
+async function MakePromptReq() {
+    return await openai.beta.threads.runs.create(
+        (thread_id = myThread.id),
         {
-          role: "user",
-          content: "What can I buy in your online store?",
-          file_ids: [file.id],
+          assistant_id: myAssistant.id,
+          instructions: "Please address the user as Rok Benko.",
         }
       );
 }
-
 //const openAiRuntime = 
 
 
-//export default {myAssistant, thread, PrepFiles, MakeOpenAiPrompt}
+export default {myAssistant, thread, PrepFiles, MakeOpenAiPrompt}
