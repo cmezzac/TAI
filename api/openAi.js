@@ -8,11 +8,13 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+let thread, assistant;
+
 async function initOpenAi(vectorStoreId) {
-  const assistant = await openai.beta.assistants.create({
+  assistant = await openai.beta.assistants.create({
     name: 'TAI Chatbot',
     model: 'gpt-4o-mini',
-    instructions: "You are a teacher assistant chatbot. Use your knowledge base to respond to queries.",
+    instructions: "You are a teacher assistant chatbot. Use your knowledge base to respond to queries. You can also use your pre-existsing insight and knowledge to help students with questions",
     tools: [{ type: 'file_search' }],
     tool_resources: {
         file_search: {
@@ -21,7 +23,7 @@ async function initOpenAi(vectorStoreId) {
     }
 });
 
-  const thread = await openai.beta.threads.create();
+  thread = await openai.beta.threads.create();
   console.log("This is the thread object: ", thread, "\n");
 
   return {assistant, thread};
@@ -118,7 +120,7 @@ async function getAssistantResponse(threadId) {
   }
 }
 
-async function PromptRequestAndResponseAsync(assistanceId, threadId, prompt) {
+async function PromptRequestAndResponseAsync(assistanceId=assistant.id, threadId=thread.id, prompt) {
   const promptRequest = await makePromptReq(assistanceId, threadId, prompt);
 
   (async () => {

@@ -1,7 +1,7 @@
 import express from 'express';
 import FileId from './schemas/FileId.js' // Make sure the path is correct
 import PdfFile from './schemas/Pdf.js';
-import fs from 'fs';
+import fs, { copyFileSync } from 'fs';
 import openAi from "./openAi.js"
 
 const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage } = openAi;
@@ -35,11 +35,12 @@ router.post("/addPdf" , async (req,res)=> {
 });
 
 
-router.post("/prompt" , async (req,res)=> {
+router.get("/prompt" , async (req,res)=> {
   try{
-    const prompt = req.body;
-    
-    res.status(201).json({message:"Success Bello"});
+    const prompt = req.params[0];
+    console.log("Prompt: ", prompt);
+    const promptRes = await PromptRequestAndResponseAsync(prompt=prompt)
+    res.status(201).json({message:"Success Bello", body:promptRes});
   }
   catch(error){
     res.status(400).json({ message: "Error adding item", error });

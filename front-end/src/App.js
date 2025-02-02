@@ -70,11 +70,34 @@ export default function App() {
     setViewMode((prevMode) => (prevMode === "student" ? "teacher" : "student"));
   };
 
+  async function GetPromptRes(prompt) {
+    // const data = {
+    //   message: JSON.stringify(prompt),
+    //   timestamp: new Date().toISOString(),
+    // }
+    
+    try {
+      console.log("prompt", prompt);
+      const response = await fetch(`http://localhost:5001/api/prompt?prompt=${encodeURIComponent(prompt)}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'  // This header is optional for GET requests
+        }
+    });
+    
+        const result = await response.json();
+        return result.body;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+  }
+
   const handleInputSubmit = (event) => {
     event.preventDefault();
     if (inputValue.trim()) {
       setChatMessages((prevMessages) => [...prevMessages, inputValue]);
-      displayDynamicMessage("Dynamic response to: " + inputValue);
+      const promptRes = GetPromptRes(inputValue);
+      displayDynamicMessage(promptRes);
       setInputValue("");
       resetTextareaHeight();
       resetBottomBoxHeight();
