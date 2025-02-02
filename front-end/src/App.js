@@ -80,10 +80,7 @@ export default function App() {
   };
 
   async function GetPromptRes(prompt) {
-    // const data = {
-    //   message: JSON.stringify(prompt),
-    //   timestamp: new Date().toISOString(),
-    // }
+
     
     try {
       console.log("prompt", prompt);

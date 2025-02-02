@@ -4,7 +4,7 @@ import PdfFile from './schemas/Pdf.js';
 import fs, { copyFileSync } from 'fs';
 import openAi from "./openAi.js"
 
-const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage } = openAi;
+const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage,PromptRequestAndResponseAsync,getSimplePromptResponse } = openAi;
 
 const router = express.Router();
 
@@ -35,16 +35,21 @@ router.post("/addPdf" , async (req,res)=> {
 });
 
 
-router.get("/prompt" , async (req,res)=> {
-  try{
-    const prompt = req.params[0];
-    console.log("Prompt: ", prompt);
-    const promptRes = await PromptRequestAndResponseAsync(prompt=prompt)
-    res.status(201).json({message:"Success Bello", body:promptRes});
-  }
-  catch(error){
-    res.status(400).json({ message: "Error adding item", error });
+router.get("/prompt", async (req, res) => {
+  try {
+    const prompt = req.query.prompt; // Access query parameter
+    console.log("Received prompt:", prompt);
+
+
+    const response = await getSimplePromptResponse(prompt);
+    console.log("Prompt Response:", response);  
+
+    res.status(200).json({ message: "Success Bello", body: response });
+  } catch (error) {
+    console.error("Error:", error.message);  // Log the error message for debugging
+    res.status(400).json({ message: "Error adding item", error: error.message });
   }
 });
+
 
 export default router;

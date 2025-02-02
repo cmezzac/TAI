@@ -29,6 +29,24 @@ async function initOpenAi(vectorStoreId) {
   return {assistant, thread};
 }
 
+async function getSimplePromptResponse(prompt) {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4", // You can use "gpt-4", "gpt-4o", or "gpt-3.5-turbo"
+      messages: [
+        { role: "system", content: "You are a helpful assistant. Give me a 20 word max response" },  // Optional system message
+        { role: "user", content: prompt },                           // User prompt
+      ],
+    });
+
+
+    const assistantReply = response.choices[0].message.content;
+    return assistantReply;
+  } catch (error) {
+    console.error("Error getting response from OpenAI:", error.message);
+    throw error;
+  }
+}
 
 async function prepTxtFiles(filePath, purpose="assistants") {
   const file = await openai.files.create({
@@ -121,16 +139,23 @@ async function getAssistantResponse(threadId) {
 }
 
 async function PromptRequestAndResponseAsync(assistanceId=assistant.id, threadId=thread.id, prompt) {
+
+  console.log("assistId: "+assistanceId, " threadId: "+ threadId);
+  console.log("inside 0");
   const promptRequest = await makePromptReq(assistanceId, threadId, prompt);
+
+  console.log("inside 1");
 
   (async () => {
     const runCompleted = await waitForRunCompletion(threadId, promptRequest.id);
+    console.log("inside 2");
     
     if (runCompleted) {
+      console.log("inside 3");
         return await getAssistantResponse(threadId);
     }
   })();
 }
 
-export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, PromptRequestAndResponseAsync, prepTxtFiles}
+export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, PromptRequestAndResponseAsync, prepTxtFiles,getSimplePromptResponse}
 
