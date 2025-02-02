@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { FaPaperPlane } from "react-icons/fa"; // Import icon
+import { FaGraduationCap } from "react-icons/fa"; // Import academic logo
 
 const wordsArray = [
   "Hello,",
@@ -149,93 +150,104 @@ export default function App() {
   return (
     <div className="App">
       <div className="main-wrapper">
-        {viewMode === "student" ? (
-          <>
-            {/* Main Content */}
-            <div className="main-content">
-              <div className="content-box"></div>
-              <div className="footer-box" ref={footerRef}>
-                {isExpanded ? (
-                  wordsArray.map((line, index) => (
-                    <p key={index}>{line}</p>
-                  ))
-                ) : (
-                  <p>{displayText}</p>
-                )}
-              </div>
-              <button className="expand-button" onClick={toggleExpand}>
-                {isExpanded ? "Collapse" : "View Transcript"}
-              </button>
-              {isExpanded && (
-                <div className="expanded-content">
-                  {wordsArray.map((line, index) => (
-                    <p key={index}>{line}</p>
-                  ))}
-                </div>
-              )}
+        <div className="content-container">
+          <div className="header">
+            <div className="title">
+              <FaGraduationCap className="logo" />
+              <h1>TAi</h1>
             </div>
-          </>
-        ) : (
-          <>
-            {/* Teacher View */}
-            <div className="main-content">
-              <div className="teacher-view">
-                <h2>Upload Documents</h2>
-                <form onSubmit={handleFileSubmit}>
-                  <input type="file" accept=".pdf,.ppt,.pptx" ref={fileInputRef} />
-                  <button type="submit">Submit</button>
-                </form>
-                <ul>
-                  {uploadedFiles.map((file, index) => (
-                    <li key={index}>{file}</li>
-                  ))}
-                </ul>
-                <button>Start Presenting</button>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Sidebar */}
-      <div className="right-sidebar">
-        <button className="toggle-view-button" onClick={toggleViewMode}>
-          {viewMode === "student" ? "Teacher View" : "Student View"}
-        </button>
-        {viewMode === "student" && (
-          <>
-            <div className="middle-box" ref={middleBoxRef}>
-              <div className="greeting-bubble">Hi I'm TAi, your virtual learning assistant</div>
-              {chatMessages.map((message, index) => (
-                <div key={index}>
-                  <div className="chat-bubble">{message}</div>
-                  {dynamicMessages[index] && (
-                    <div className="dynamic-bubble">{dynamicMessages[index]}</div>
+            <button className="generate-notes-button">Generate Condensed Notes</button>
+          </div>
+          <div className="content-wrapper">
+            {viewMode === "student" ? (
+              <>
+                {/* Main Content */}
+                <div className="main-content">
+                  <div className="content-box"></div>
+                  <div className="footer-box" ref={footerRef}>
+                    {isExpanded ? (
+                      wordsArray.map((line, index) => (
+                        <p key={index}>{line}</p>
+                      ))
+                    ) : (
+                      <p>{displayText}</p>
+                    )}
+                  </div>
+                  <button className="expand-button" onClick={toggleExpand}>
+                    {isExpanded ? "Collapse" : "View Transcript"}
+                  </button>
+                  {isExpanded && (
+                    <div className="expanded-content">
+                      {wordsArray.map((line, index) => (
+                        <p key={index}>{line}</p>
+                      ))}
+                    </div>
                   )}
                 </div>
-              ))}
-              {currentDynamicMessage && !dynamicMessages.includes(currentDynamicMessage) && (
-                <div className="dynamic-bubble">{currentDynamicMessage}</div>
-              )}
-            </div>
-            <div className="bottom-box" ref={bottomBoxRef}>
-              <form onSubmit={handleInputSubmit} className="input-form">
-                <textarea
-                  ref={textareaRef}
-                  name="messageInput"
-                  placeholder="Type your message..."
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  rows="1"
-                  style={{ resize: "none" }}
-                />
-                <button type="submit" className="submit-button">
-                  <FaPaperPlane />
-                </button>
-              </form>
-            </div>
-          </>
-        )}
+              </>
+            ) : (
+              <>
+                {/* Teacher View */}
+                <div className="main-content">
+                  <div className="teacher-view">
+                    <h2>Upload Documents</h2>
+                    <form onSubmit={handleFileSubmit}>
+                      <input type="file" accept=".pdf,.ppt,.pptx" ref={fileInputRef} />
+                      <button type="submit">Submit</button>
+                    </form>
+                    <ul>
+                      {uploadedFiles.map((file, index) => (
+                        <li key={index}>{file}</li>
+                      ))}
+                    </ul>
+                    <button>Start Presenting</button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="right-sidebar">
+          <button className="toggle-view-button" onClick={toggleViewMode}>
+            {viewMode === "student" ? "Teacher View" : "Student View"}
+          </button>
+          {viewMode === "student" && (
+            <>
+              <div className="middle-box" ref={middleBoxRef}>
+                <div className="greeting-bubble">Hi I'm TAi, your virtual learning assistant</div>
+                {chatMessages.map((message, index) => (
+                  <div key={index}>
+                    <div className="chat-bubble">{message}</div>
+                    {dynamicMessages[index] && (
+                      <div className="dynamic-bubble">{dynamicMessages[index]}</div>
+                    )}
+                  </div>
+                ))}
+                {currentDynamicMessage && !dynamicMessages.includes(currentDynamicMessage) && (
+                  <div className="dynamic-bubble">{currentDynamicMessage}</div>
+                )}
+              </div>
+              <div className="bottom-box" ref={bottomBoxRef}>
+                <form onSubmit={handleInputSubmit} className="input-form">
+                  <textarea
+                    ref={textareaRef}
+                    name="messageInput"
+                    placeholder="Type your message..."
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    rows="1"
+                    style={{ resize: "none" }}
+                  />
+                  <button type="submit" className="submit-button">
+                    <FaPaperPlane />
+                  </button>
+                </form>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
