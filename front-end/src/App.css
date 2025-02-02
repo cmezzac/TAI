@@ -14,7 +14,7 @@
 
 .small-box {
   background-color: #dcdfe4; /* Lighter shade */
-  height: 64px;
+  height: 100px;
   margin-bottom: 16px;
   border-radius: 8px;
   display: flex;
@@ -63,8 +63,47 @@
 }
 
 .footer-box {
-  background-color: #dcdfe4; /* Lighter shade */
-  height: 96px; /* Made bigger */
+  background-color: #dcdfe4;
+  max-height: 50px; /* Keep the box small for better scrolling effect */
   margin-top: 16px;
   border-radius: 8px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 2; /* Increase line spacing */
+  padding: 9px;
+  text-align: center;
+  scroll-behavior: smooth;
 }
+
+.footer-box p {
+  margin: 5px 0;
+  white-space: pre-wrap;
+}
+
+.expand-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.expand-button:hover {
+  background-color: #0056b3;
+}
+
+.expanded-content {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  max-height: 200px; /* Adjust as needed */
+  overflow-y: auto;
+}
+
