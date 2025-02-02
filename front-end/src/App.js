@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import { FaPaperPlane, FaGraduationCap } from "react-icons/fa";
+import { FaPaperPlane, FaGraduationCap, FaDownload } from "react-icons/fa"; // Import icons
 
 export default function App() {
   const [displayText, setDisplayText] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
-  const [viewMode, setViewMode] = useState("student");
-  const [chatMessages, setChatMessages] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [dynamicMessages, setDynamicMessages] = useState([]);
-  const [currentDynamicMessage, setCurrentDynamicMessage] = useState("");
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [transcripts, setTranscripts] = useState([]);
+  const [viewMode, setViewMode] = useState("student"); // New state for view mode
+  const [chatMessages, setChatMessages] = useState([]); // New state for chat messages
+  const [inputValue, setInputValue] = useState(""); // New state for input value
+  const [dynamicMessages, setDynamicMessages] = useState([]); // New state for dynamic messages
+  const [currentDynamicMessage, setCurrentDynamicMessage] = useState(""); // New state for current dynamic message
+  const [uploadedFiles, setUploadedFiles] = useState([]); // New state for uploaded files
+  const [transcript, setTranscript] = useState(""); // New state for transcript
+  const [transcripts, setTranscripts] = useState([]); // New state for transcripts
   const [currentWordsArray, setCurrentWordsArray] = useState([
     "Hello,",
     "this is an example.",
@@ -20,41 +21,49 @@ export default function App() {
     "This will be dynamic and fun!",
     "More text being added dynamically.",
     "Scrolling should keep the last line centered.",
-    "Experimenting with real-time updates."
+    "Experimenting with real-time updates.",
   ]);
 
   const footerRef = useRef(null);
-  const middleBoxRef = useRef(null);
-  const bottomBoxRef = useRef(null);
-  const textareaRef = useRef(null);
-  const fileInputRef = useRef(null);
+  const middleBoxRef = useRef(null); // New ref for middle box
+  const bottomBoxRef = useRef(null); // New ref for bottom box
+  const textareaRef = useRef(null); // New ref for textarea
+  const fileInputRef = useRef(null); // New ref for file input
 
   useEffect(() => {
     let currentIndex = 0;
     const interval = setInterval(() => {
       if (currentIndex < currentWordsArray.length) {
-        setDisplayText((prevText) => prevText + " " + currentWordsArray[currentIndex]);
+        const newWord = currentWordsArray[currentIndex];
+        setDisplayText((prevText) => prevText + " " + newWord);
+        setTranscript((prevTranscript) => prevTranscript + " " + newWord);
         currentIndex++;
       } else {
         clearInterval(interval);
       }
-    }, 2000);
+    }, 2000); // Update every 2 seconds
 
     return () => clearInterval(interval);
   }, [currentWordsArray]);
 
   useEffect(() => {
+    // Add initial greeting message when the app loads
     setChatMessages([]);
   }, []);
 
+  // Auto-scroll to keep the latest line centered
   useEffect(() => {
     if (footerRef.current && !isExpanded) {
       const footer = footerRef.current;
-      const isAtBottom = footer.scrollHeight - footer.clientHeight - footer.scrollTop < 50;
+
+      // Check if the user is near the bottom before auto-scrolling
+      const isAtBottom =
+        footer.scrollHeight - footer.clientHeight - footer.scrollTop < 50; // Adjust sensitivity
+
       if (isAtBottom) {
         setTimeout(() => {
-          footer.scrollTop = footer.scrollHeight;
-        }, 1000);
+          footer.scrollTop = footer.scrollHeight; // Scroll to the bottom
+        }, 1000); // Wait 1 second before auto-scrolling
       }
     }
   }, [displayText, isExpanded]);
@@ -119,7 +128,7 @@ export default function App() {
 
   const resetTextareaHeight = () => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "50px";
+      textareaRef.current.style.height = "50px"; // Reset to original size
     }
   };
 
@@ -132,14 +141,14 @@ export default function App() {
 
   const resetBottomBoxHeight = () => {
     if (bottomBoxRef.current) {
-      bottomBoxRef.current.style.height = "50px";
-      bottomBoxRef.current.style.padding = "10px";
+      bottomBoxRef.current.style.height = "50px"; // Reset to original size
+      bottomBoxRef.current.style.padding = "10px"; // Ensure padding stays the same
     }
   };
 
   useEffect(() => {
     if (bottomBoxRef.current) {
-      bottomBoxRef.current.style.padding = "10px";
+      bottomBoxRef.current.style.padding = "10px"; // Ensure padding stays the same
     }
   }, [chatMessages]);
 
@@ -153,9 +162,9 @@ export default function App() {
       } else {
         clearInterval(interval);
         setDynamicMessages((prevMessages) => [...prevMessages, message]);
-        setCurrentDynamicMessage("");
+        setCurrentDynamicMessage(""); // Clear current dynamic message
       }
-    }, 50);
+    }, 50); // Adjust speed as needed
   };
 
   const handleFileSubmit = (event) => {
@@ -163,7 +172,7 @@ export default function App() {
     if (fileInputRef.current.files.length > 0) {
       const file = fileInputRef.current.files[0];
       setUploadedFiles((prevFiles) => [...prevFiles, file.name]);
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = ""; // Clear the file input
     }
   };
 
@@ -174,6 +183,15 @@ export default function App() {
       setCurrentWordsArray(newContent.split(","));
       setDisplayText("");
     }
+  };
+
+  const downloadTranscript = () => {
+    const element = document.createElement("a");
+    const file = new Blob([transcript], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = "transcript.txt";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
   };
 
   return (
@@ -192,6 +210,7 @@ export default function App() {
           <div className="content-wrapper">
             {viewMode === "student" ? (
               <>
+                {/* Main Content */}
                 <div className="main-content">
                   <div className="content-box"></div>
                   <div className="footer-box" ref={footerRef}>
@@ -203,13 +222,26 @@ export default function App() {
                       <p>{displayText}</p>
                     )}
                   </div>
-                  <button className="expand-button" onClick={toggleExpand}>
-                    {isExpanded ? "Collapse" : "View Transcript"}
-                  </button>
+                  <div className="transcript-buttons">
+                    <button className="expand-button" onClick={toggleExpand} style={{ flex: 1 }}>
+                      {isExpanded ? "Collapse" : "View Transcript"}
+                    </button>
+                    <button className="download-button" onClick={downloadTranscript}>
+                      <FaDownload />
+                    </button>
+                  </div>
+                  {isExpanded && (
+                    <div className="expanded-content">
+                      {currentWordsArray.map((line, index) => (
+                        <p key={index}>{line}</p>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </>
             ) : (
               <>
+                {/* Teacher View */}
                 <div className="main-content">
                   <div className="teacher-view">
                     <h2>Upload Documents</h2>
@@ -223,6 +255,9 @@ export default function App() {
                       ))}
                     </ul>
                     <button>Start Presenting</button>
+                    <button className="download-button" onClick={downloadTranscript}>
+                      <FaDownload />
+                    </button>
                   </div>
                 </div>
               </>
@@ -230,6 +265,7 @@ export default function App() {
           </div>
         </div>
 
+        {/* Sidebar */}
         <div className="right-sidebar">
           <button className="toggle-view-button" onClick={toggleViewMode}>
             {viewMode === "student" ? "Teacher View" : "Student View"}

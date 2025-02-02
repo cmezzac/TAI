@@ -101,7 +101,7 @@
   border-left: 1px solid #dcdfe4;
   display: flex;
   flex-direction: column;
-  height: 100%; /* Ensure it takes the full height */
+  height: auto; /* Ensure it takes the full height */
 }
 
 .toggle-view-button {
@@ -256,8 +256,14 @@
   white-space: pre-wrap;
 }
 
-.expand-button {
+.transcript-buttons {
+  display: flex;
+  align-items: center;
   margin-top: 10px;
+}
+
+.expand-button {
+  flex: 1; /* Take up the remaining space */
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
@@ -268,6 +274,24 @@
 }
 
 .expand-button:hover {
+  background-color: #0056b3;
+}
+
+.download-button {
+  margin-left: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-button:hover {
   background-color: #0056b3;
 }
 
