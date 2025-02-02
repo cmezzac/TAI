@@ -21,10 +21,12 @@ export default function App() {
   const [inputValue, setInputValue] = useState(""); // New state for input value
   const [dynamicMessages, setDynamicMessages] = useState([]); // New state for dynamic messages
   const [currentDynamicMessage, setCurrentDynamicMessage] = useState(""); // New state for current dynamic message
+  const [uploadedFiles, setUploadedFiles] = useState([]); // New state for uploaded files
   const footerRef = useRef(null);
   const middleBoxRef = useRef(null); // New ref for middle box
   const bottomBoxRef = useRef(null); // New ref for bottom box
   const textareaRef = useRef(null); // New ref for textarea
+  const fileInputRef = useRef(null); // New ref for file input
   let currentIndex = 0;
 
   useEffect(() => {
@@ -135,6 +137,15 @@ export default function App() {
     }, 50); // Adjust speed as needed
   };
 
+  const handleFileSubmit = (event) => {
+    event.preventDefault();
+    if (fileInputRef.current.files.length > 0) {
+      const file = fileInputRef.current.files[0];
+      setUploadedFiles((prevFiles) => [...prevFiles, file.name]);
+      fileInputRef.current.value = ""; // Clear the file input
+    }
+  };
+
   return (
     <div className="App">
       <div className="main-wrapper">
@@ -170,7 +181,15 @@ export default function App() {
             <div className="main-content">
               <div className="teacher-view">
                 <h2>Upload Documents</h2>
-                <input type="file" accept=".pdf,.ppt,.pptx" />
+                <form onSubmit={handleFileSubmit}>
+                  <input type="file" accept=".pdf,.ppt,.pptx" ref={fileInputRef} />
+                  <button type="submit">Submit</button>
+                </form>
+                <ul>
+                  {uploadedFiles.map((file, index) => (
+                    <li key={index}>{file}</li>
+                  ))}
+                </ul>
                 <button>Start Presenting</button>
               </div>
             </div>
