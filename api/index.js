@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 import openAi from "./openAi.js"
 
-const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus } = openAi;
+const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, makePromptReq, getAssistantResponse, waitForRunCompletion } = openAi;
 
 import mongoRouter from "./mongo_router.js"; // Import the router
 
@@ -39,14 +39,19 @@ const {assistant, thread} = await initOpenAi(vectorStore.id);
 console.log("This is the assistant object: ", assistant, "\n");
 console.log("This is the thread object: ", thread, "\n");
 
-const threadMsg = await makeThreadMessage("A list of words", thread.id, fileId);
+const threadMsg = await makeThreadMessage("Tell me about the start of the byzantine empire", thread.id, fileId);
 console.log("This is the threadMsg object: ", threadMsg, "\n");
 
-// const prompt = await makePromptReq(assistant.id, thread.id, "return all words from the file that start with an H")
-// console.log("This is the prompt request: ", prompt, "\n");
+const prompt = await makePromptReq(assistant.id, thread.id, "Tell me about the start of the byzantine empire");
+console.log("This is the prompt request: ", prompt, "\n");
 
-// let run = await getRunStatus(thread.id, prompt.id);
-// console.log("This is the prompt answer: ", prompt, "\n");
+(async () => {
+  const runCompleted = await waitForRunCompletion(thread.id, prompt.id);
+  
+  if (runCompleted) {
+      await getAssistantResponse(thread.id);
+  }
+})();
 
 // Sample route
 

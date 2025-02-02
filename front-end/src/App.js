@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
+import PdfViewer from "./components/PdfViewer";
 
 const wordsArray = [
   "Hello,",
@@ -13,6 +14,7 @@ const wordsArray = [
 ];
 
 export default function App() {
+
   const [displayText, setDisplayText] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const footerRef = useRef(null);
@@ -48,6 +50,21 @@ export default function App() {
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
+
+  const handleTeacherClick = () => {
+    console.log("Teacher button clicked");
+  };
+
+  const handleStudentClick = () => {
+    console.log("Student button clicked");
+  };
+
+  const handleStartRecording = () => {
+    console.log("Start Recording button clicked");
+  };
+
+  const handleUploadDocument = () => {
+    console.log("Upload Document button clicked");
   };
 
   return (
@@ -57,7 +74,8 @@ export default function App() {
         <div className="small-box">
           <h3>Hi I'm TAi, your virtual learning assistant</h3>
         </div>
-        <div className="middle-box"></div>
+        <div className="middle-box">
+        </div>
         <div className="bottom-box">
           <input type="text" placeholder="Type your message..." />
         </div>
@@ -85,6 +103,15 @@ export default function App() {
             ))}
           </div>
         )}
+        <div className="button-group">
+          <button className="btn" onClick={handleTeacherClick}>Teacher</button>
+          <button className="btn" onClick={handleStudentClick}>Student</button>
+          <button className="btn btn-green" onClick={handleStartRecording}>Start Recording</button>
+          <button className="btn btn-red" onClick={handleUploadDocument}>Upload Document</button>
+        </div>
+        <div className="content-box">
+          <PdfViewer />
+        </div>
       </div>
     </div>
   );

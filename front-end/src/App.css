@@ -1,13 +1,13 @@
 .App {
   display: flex;
   height: 100vh;
-  flex-direction: row-reverse; /* Moves the sidebar to the right */
+  flex-direction: row-reverse;
 }
 
 .right-sidebar {
   width: 25%;
   padding: 16px;
-  border-left: 1px solid #dcdfe4; /* Change to left border since it's now on the right */
+  border-left: 1px solid #dcdfe4;
   display: flex;
   flex-direction: column;
 }
@@ -24,15 +24,15 @@
 }
 
 .middle-box {
-  background-color: #dcdfe4; /* Lighter shade */
-  flex: 1; /* Take up all remaining space */
+  background-color: #dcdfe4;
+  flex: 1;
   border-radius: 8px;
   margin-bottom: 16px;
 }
 
 .bottom-box {
-  background-color: #dcdfe4; /* Lighter shade */
-  height: 96px; /* Adjusted to match the footer box */
+  background-color: #dcdfe4;
+  height: 96px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -56,8 +56,45 @@
   flex-direction: column;
 }
 
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.btn-red {
+  background-color: #ff4d4d;
+}
+
+.btn-red:hover {
+  background-color: #cc0000;
+}
+
+.btn-green {
+  background-color: #28a745;
+}
+
+.btn-green:hover {
+  background-color: #218838;
+}
+
 .content-box {
-  background-color: #dcdfe4; /* Lighter shade */
+  background-color: #dcdfe4;
   flex: 1;
   border-radius: 8px;
 }
@@ -106,4 +143,5 @@
   max-height: 200px; /* Adjust as needed */
   overflow-y: auto;
 }
+
 
