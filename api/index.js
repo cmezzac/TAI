@@ -29,18 +29,18 @@ mongoose
 
 
 //test open ai
-let vectorStore = await getOrCreateVectorStore();
+// let vectorStore = await getOrCreateVectorStore();
 
-const fileId = await prepTxtFiles("test.txt");
-await addFileToVectorStoreFiles(vectorStore.id, fileId);
+// const fileId = await prepTxtFiles("test.txt");
+// await addFileToVectorStoreFiles(vectorStore.id, fileId);
 
-const {assistant, thread} = await initOpenAi(vectorStore.id);
+// const {assistant, thread} = await initOpenAi(vectorStore.id);
 
-const threadMsg = await makeThreadMessage("Tell me about the start of the byzantine empire", thread.id, fileId);
+//const threadMsg = await makeThreadMessage("Tell me about the start of the byzantine empire", thread.id, fileId);
 
-const finalPrompt = await PromptRequestAndResponseAsync(assistant.id, thread.id, "Tell me about the start of the byzantine empire");
+// const finalPrompt = await PromptRequestAndResponseAsync(assistant.id, thread.id, "Tell me about the start of the byzantine empire");
 
-// Sample route
+// // Sample route
 
 // Use the Mongo router for API routes
 app.use("/api", mongoRouter);
