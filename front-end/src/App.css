@@ -51,15 +51,19 @@
   height: auto; /* Ensure it takes the full height */
 }
 
-.small-box {
-  background-color: #dcdfe4;
-  height: 100px;
+.toggle-view-button {
   margin-bottom: 16px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toggle-view-button:hover {
+  background-color: #0056b3;
 }
 
 .middle-box {
@@ -70,12 +74,24 @@
   padding: 16px;
   overflow-y: auto;
   display: flex;
-  flex-direction: column-reverse; /* Reverse the column direction */
-  max-height: calc(100% - 200px); /* Adjust height to fit within the sidebar */
+  flex-direction: column; /* Start text bubbles at the top */
+  max-height: calc(100% - 66px); /* Adjust height to fit within the sidebar */
+}
+
+.greeting-bubble {
+  background-color: #0056b3; /* Same styling as dynamic responses */
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
+  align-self: flex-start; /* Align to the left */
+  clear: both; /* Ensure proper positioning */
 }
 
 .chat-bubble {
-  background-color: #007bff;
+  background-color: #007bff; /* Lighter blue for input submissions */
   color: white;
   padding: 10px;
   border-radius: 10px;
@@ -89,7 +105,7 @@
 .bottom-box {
   background-color: #dcdfe4;
   min-height: 50px; /* Set minimum height */
-  height: auto; /* Adjust height to fit content */
+  height: 50px; /* Set initial height */
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -104,6 +120,7 @@
   align-items: center;
   width: 100%;
   height: auto;
+  max-height: 250px;
 }
 
 .bottom-box textarea {
@@ -114,7 +131,8 @@
   font-size: 16px;
   background-color: #fff;
   resize: none; /* Disable manual resizing */
-  overflow: hidden; /* Hide overflow */
+  overflow-y: auto; /* Allow vertical scrolling */
+  max-height: 200px; /* Set maximum height */
   height: auto; /* Ensure height adjusts automatically */
   flex-grow: 1; /* Allow textarea to grow */
 }
@@ -138,7 +156,7 @@
 }
 
 .dynamic-bubble {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Darker blue for dynamic responses */
   color: white;
   padding: 10px;
   border-radius: 10px;
