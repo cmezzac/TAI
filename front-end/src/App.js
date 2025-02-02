@@ -1,71 +1,68 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import { FaPaperPlane } from "react-icons/fa"; // Import icon
-import { FaGraduationCap } from "react-icons/fa"; // Import academic logo
-
-const wordsArray = [
-  "Hello,",
-  "this is an example.",
-  "We will gradually populate this div.",
-  "Eventually, we'll use OpenAI's text-to-speech.",
-  "This will be dynamic and fun!",
-  "More text being added dynamically.",
-  "Scrolling should keep the last line centered.",
-  "Experimenting with real-time updates.",
-];
+import { FaPaperPlane, FaGraduationCap } from "react-icons/fa";
 
 export default function App() {
   const [displayText, setDisplayText] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
-  const [viewMode, setViewMode] = useState("student"); // New state for view mode
-  const [chatMessages, setChatMessages] = useState([]); // New state for chat messages
-  const [inputValue, setInputValue] = useState(""); // New state for input value
-  const [dynamicMessages, setDynamicMessages] = useState([]); // New state for dynamic messages
-  const [currentDynamicMessage, setCurrentDynamicMessage] = useState(""); // New state for current dynamic message
-  const [uploadedFiles, setUploadedFiles] = useState([]); // New state for uploaded files
+  const [viewMode, setViewMode] = useState("student");
+  const [chatMessages, setChatMessages] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [dynamicMessages, setDynamicMessages] = useState([]);
+  const [currentDynamicMessage, setCurrentDynamicMessage] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [transcripts, setTranscripts] = useState([]);
+  const [currentWordsArray, setCurrentWordsArray] = useState([
+    "Hello,",
+    "this is an example.",
+    "We will gradually populate this div.",
+    "Eventually, we'll use OpenAI's text-to-speech.",
+    "This will be dynamic and fun!",
+    "More text being added dynamically.",
+    "Scrolling should keep the last line centered.",
+    "Experimenting with real-time updates."
+  ]);
+
   const footerRef = useRef(null);
-  const middleBoxRef = useRef(null); // New ref for middle box
-  const bottomBoxRef = useRef(null); // New ref for bottom box
-  const textareaRef = useRef(null); // New ref for textarea
-  const fileInputRef = useRef(null); // New ref for file input
-  let currentIndex = 0;
+  const middleBoxRef = useRef(null);
+  const bottomBoxRef = useRef(null);
+  const textareaRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
+    let currentIndex = 0;
     const interval = setInterval(() => {
-      if (currentIndex < wordsArray.length) {
-        setDisplayText((prevText) => prevText + " " + wordsArray[currentIndex]);
+      if (currentIndex < currentWordsArray.length) {
+        setDisplayText((prevText) => prevText + " " + currentWordsArray[currentIndex]);
         currentIndex++;
       } else {
         clearInterval(interval);
       }
-    }, 2000); // Update every 2 seconds
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentWordsArray]);
 
   useEffect(() => {
-    // Add initial greeting message when the app loads
     setChatMessages([]);
   }, []);
 
-  // Auto-scroll to keep the latest line centered
   useEffect(() => {
     if (footerRef.current && !isExpanded) {
       const footer = footerRef.current;
-
-      // Check if the user is near the bottom before auto-scrolling
-      const isAtBottom =
-        footer.scrollHeight - footer.clientHeight - footer.scrollTop < 50; // Adjust sensitivity
-
+      const isAtBottom = footer.scrollHeight - footer.clientHeight - footer.scrollTop < 50;
       if (isAtBottom) {
         setTimeout(() => {
-          footer.scrollTop = footer.scrollHeight; // Scroll to the bottom
-        }, 1000); // Wait 1 second before auto-scrolling
+          footer.scrollTop = footer.scrollHeight;
+        }, 1000);
       }
     }
   }, [displayText, isExpanded]);
 
   const toggleExpand = () => {
+    if (!isExpanded) {
+      setTranscripts((prev) => [...prev, displayText]);
+    }
     setIsExpanded(!isExpanded);
   };
 
@@ -99,7 +96,7 @@ export default function App() {
 
   const resetTextareaHeight = () => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "50px"; // Reset to original size
+      textareaRef.current.style.height = "50px";
     }
   };
 
@@ -112,14 +109,14 @@ export default function App() {
 
   const resetBottomBoxHeight = () => {
     if (bottomBoxRef.current) {
-      bottomBoxRef.current.style.height = "50px"; // Reset to original size
-      bottomBoxRef.current.style.padding = "10px"; // Ensure padding stays the same
+      bottomBoxRef.current.style.height = "50px";
+      bottomBoxRef.current.style.padding = "10px";
     }
   };
 
   useEffect(() => {
     if (bottomBoxRef.current) {
-      bottomBoxRef.current.style.padding = "10px"; // Ensure padding stays the same
+      bottomBoxRef.current.style.padding = "10px";
     }
   }, [chatMessages]);
 
@@ -133,9 +130,9 @@ export default function App() {
       } else {
         clearInterval(interval);
         setDynamicMessages((prevMessages) => [...prevMessages, message]);
-        setCurrentDynamicMessage(""); // Clear current dynamic message
+        setCurrentDynamicMessage("");
       }
-    }, 50); // Adjust speed as needed
+    }, 50);
   };
 
   const handleFileSubmit = (event) => {
@@ -143,7 +140,16 @@ export default function App() {
     if (fileInputRef.current.files.length > 0) {
       const file = fileInputRef.current.files[0];
       setUploadedFiles((prevFiles) => [...prevFiles, file.name]);
-      fileInputRef.current.value = ""; // Clear the file input
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleNewTranscript = () => {
+    const newContent = prompt("Enter new transcript content, separated by commas:");
+    if (newContent) {
+      setTranscripts((prev) => [...prev, displayText]);
+      setCurrentWordsArray(newContent.split(","));
+      setDisplayText("");
     }
   };
 
@@ -156,18 +162,19 @@ export default function App() {
               <FaGraduationCap className="logo" />
               <h1>TAi</h1>
             </div>
-            <button className="generate-notes-button">Generate Condensed Notes</button>
+            <button className="generate-notes-button" onClick={handleNewTranscript}>
+              Add New Transcript
+            </button>
           </div>
           <div className="content-wrapper">
             {viewMode === "student" ? (
               <>
-                {/* Main Content */}
                 <div className="main-content">
                   <div className="content-box"></div>
                   <div className="footer-box" ref={footerRef}>
                     {isExpanded ? (
-                      wordsArray.map((line, index) => (
-                        <p key={index}>{line}</p>
+                      transcripts.map((transcript, index) => (
+                        <p key={index}>{transcript}</p>
                       ))
                     ) : (
                       <p>{displayText}</p>
@@ -176,18 +183,10 @@ export default function App() {
                   <button className="expand-button" onClick={toggleExpand}>
                     {isExpanded ? "Collapse" : "View Transcript"}
                   </button>
-                  {isExpanded && (
-                    <div className="expanded-content">
-                      {wordsArray.map((line, index) => (
-                        <p key={index}>{line}</p>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </>
             ) : (
               <>
-                {/* Teacher View */}
                 <div className="main-content">
                   <div className="teacher-view">
                     <h2>Upload Documents</h2>
@@ -208,7 +207,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="right-sidebar">
           <button className="toggle-view-button" onClick={toggleViewMode}>
             {viewMode === "student" ? "Teacher View" : "Student View"}
