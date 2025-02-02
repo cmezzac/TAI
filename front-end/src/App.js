@@ -40,6 +40,11 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    // Add initial greeting message when the app loads
+    setChatMessages([]);
+  }, []);
+
   // Auto-scroll to keep the latest line centered
   useEffect(() => {
     if (footerRef.current && !isExpanded) {
@@ -50,7 +55,9 @@ export default function App() {
         footer.scrollHeight - footer.clientHeight - footer.scrollTop < 50; // Adjust sensitivity
 
       if (isAtBottom) {
-        footer.scrollTop = footer.scrollHeight; // Scroll to the bottom
+        setTimeout(() => {
+          footer.scrollTop = footer.scrollHeight; // Scroll to the bottom
+        }, 1000); // Wait 1 second before auto-scrolling
       }
     }
   }, [displayText, isExpanded]);
@@ -59,12 +66,8 @@ export default function App() {
     setIsExpanded(!isExpanded);
   };
 
-  const switchToTeacherView = () => {
-    setViewMode("teacher");
-  };
-
-  const switchToStudentView = () => {
-    setViewMode("student");
+  const toggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === "student" ? "teacher" : "student"));
   };
 
   const handleInputSubmit = (event) => {
@@ -127,6 +130,7 @@ export default function App() {
       } else {
         clearInterval(interval);
         setDynamicMessages((prevMessages) => [...prevMessages, message]);
+        setCurrentDynamicMessage(""); // Clear current dynamic message
       }
     }, 50); // Adjust speed as needed
   };
@@ -134,12 +138,6 @@ export default function App() {
   return (
     <div className="App">
       <div className="main-wrapper">
-        {/* Toggle Buttons */}
-        <div className="Header">
-          <button className={viewMode === "student" ? "active" : ""} onClick={switchToStudentView}>Student View</button>
-          <button className={viewMode === "teacher" ? "active" : ""} onClick={switchToTeacherView}>Teacher View</button>
-        </div>
-
         {viewMode === "student" ? (
           <>
             {/* Main Content */}
@@ -182,20 +180,24 @@ export default function App() {
 
       {/* Sidebar */}
       <div className="right-sidebar">
+        <button className="toggle-view-button" onClick={toggleViewMode}>
+          {viewMode === "student" ? "Teacher View" : "Student View"}
+        </button>
         {viewMode === "student" && (
           <>
-            <div className="small-box">
-              <h3>Hi I'm TAi, your virtual learning assistant</h3>
-            </div>
             <div className="middle-box" ref={middleBoxRef}>
+              <div className="greeting-bubble">Hi I'm TAi, your virtual learning assistant</div>
               {chatMessages.map((message, index) => (
                 <div key={index}>
                   <div className="chat-bubble">{message}</div>
-                  <div className="dynamic-bubble">
-                    {index === chatMessages.length - 1 ? currentDynamicMessage : dynamicMessages[index]}
-                  </div>
+                  {dynamicMessages[index] && (
+                    <div className="dynamic-bubble">{dynamicMessages[index]}</div>
+                  )}
                 </div>
-              )).reverse()}
+              ))}
+              {currentDynamicMessage && !dynamicMessages.includes(currentDynamicMessage) && (
+                <div className="dynamic-bubble">{currentDynamicMessage}</div>
+              )}
             </div>
             <div className="bottom-box" ref={bottomBoxRef}>
               <form onSubmit={handleInputSubmit} className="input-form">
