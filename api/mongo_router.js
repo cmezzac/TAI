@@ -4,7 +4,7 @@ import PdfFile from './schemas/Pdf.js';
 import fs from 'fs';
 import openAi from "./openAi.js"
 
-const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus } = openAi;
+const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage } = openAi;
 
 const router = express.Router();
 
@@ -26,6 +26,18 @@ router.post("/addPdf" , async (req,res)=> {
     await prepFiles(pdfBuffer);
     
     await pdfFile.save();
+    
+    res.status(201).json({message:"Success Bello"});
+  }
+  catch(error){
+    res.status(400).json({ message: "Error adding item", error });
+  }
+});
+
+
+router.post("/prompt" , async (req,res)=> {
+  try{
+    const prompt = req.body;
     
     res.status(201).json({message:"Success Bello"});
   }
