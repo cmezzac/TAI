@@ -1,19 +1,58 @@
 .App {
   display: flex;
-  height: 100vh;
-  flex-direction: row-reverse; /* Moves the sidebar to the right */
+  height: 100vh; /* Use viewport height */
+  overflow: hidden; /* Prevent scrolling */
+}
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure it takes the full height */
+}
+
+.Header {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.Header button {
+  margin-top: 10px;
+  margin-right: 10px; /* Add this line for spacing */
+  padding: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.Header button:hover {
+  background-color: #0056b3;
+}
+
+.view-toggle button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.view-toggle button:hover {
+  background-color: #e0e0e0;
 }
 
 .right-sidebar {
   width: 25%;
   padding: 16px;
-  border-left: 1px solid #dcdfe4; /* Change to left border since it's now on the right */
+  border-left: 1px solid #dcdfe4;
   display: flex;
   flex-direction: column;
+  height: auto; /* Ensure it takes the full height */
 }
 
 .small-box {
-  background-color: #dcdfe4; /* Lighter shade */
+  background-color: #dcdfe4;
   height: 100px;
   margin-bottom: 16px;
   border-radius: 8px;
@@ -24,29 +63,90 @@
 }
 
 .middle-box {
-  background-color: #dcdfe4; /* Lighter shade */
-  flex: 1; /* Take up all remaining space */
+  background-color: #f5f5f5;
+  flex: 1;
   border-radius: 8px;
   margin-bottom: 16px;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse; /* Reverse the column direction */
+  max-height: calc(100% - 200px); /* Adjust height to fit within the sidebar */
+}
+
+.chat-bubble {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
+  float: right; /* Align to the right */
+  clear: both; /* Ensure proper positioning */
 }
 
 .bottom-box {
-  background-color: #dcdfe4; /* Lighter shade */
-  height: 96px; /* Adjusted to match the footer box */
+  background-color: #dcdfe4;
+  min-height: 50px; /* Set minimum height */
+  height: auto; /* Adjust height to fit content */
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px; /* Ensure padding stays the same */
+  flex-shrink: 0; /* Prevent shrinking */
+  transition: height 0.2s, padding 0.2s; /* Smooth transition for height and padding change */
+}
+
+.input-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: auto;
+}
+
+.bottom-box textarea {
+  width: 100%; /* Adjust width to fit container */
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 16px;
+  background-color: #fff;
+  resize: none; /* Disable manual resizing */
+  overflow: hidden; /* Hide overflow */
+  height: auto; /* Ensure height adjusts automatically */
+  flex-grow: 1; /* Allow textarea to grow */
+}
+
+.submit-button {
+  margin-left: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.bottom-box input[type="text"] {
-  width: 90%;
-  height: 40px;
-  border: 1px solid #dcdfe4;
-  border-radius: 8px;
-  padding: 8px;
-  font-size: 16px;
-  background-color: #dcdfe4;
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.dynamic-bubble {
+  background-color: #0056b3;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
+  align-self: flex-start; /* Align to the left */
+  clear: both; /* Ensure proper positioning */
 }
 
 .main-content {
@@ -54,17 +154,18 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Prevent scrolling */
 }
 
 .content-box {
-  background-color: #dcdfe4; /* Lighter shade */
+  background-color: #dcdfe4;
   flex: 1;
   border-radius: 8px;
 }
 
 .footer-box {
   background-color: #dcdfe4;
-  max-height: 50px; /* Keep the box small for better scrolling effect */
+  max-height: 50px;
   margin-top: 16px;
   border-radius: 8px;
   overflow-y: auto;
@@ -73,7 +174,7 @@
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  line-height: 2; /* Increase line spacing */
+  line-height: 2;
   padding: 9px;
   text-align: center;
   scroll-behavior: smooth;
@@ -103,7 +204,33 @@
   margin-top: 10px;
   padding: 10px;
   border: 1px solid #ccc;
-  max-height: 200px; /* Adjust as needed */
+  max-height: 200px;
   overflow-y: auto;
+}
+
+.teacher-view {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.teacher-view h2 {
+  margin-bottom: 20px;
+}
+
+.teacher-view input {
+  margin-bottom: 20px;
+}
+
+.teacher-view button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.teacher-view button:hover {
+  background-color: #0056b3;
 }
 
