@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import { FaPaperPlane } from "react-icons/fa"; // Import icon
-import { FaGraduationCap } from "react-icons/fa"; // Import academic logo
+import { FaPaperPlane, FaGraduationCap, FaDownload } from "react-icons/fa"; // Import icons
 
 const wordsArray = [
   "Hello,",
@@ -23,6 +22,7 @@ export default function App() {
   const [dynamicMessages, setDynamicMessages] = useState([]); // New state for dynamic messages
   const [currentDynamicMessage, setCurrentDynamicMessage] = useState(""); // New state for current dynamic message
   const [uploadedFiles, setUploadedFiles] = useState([]); // New state for uploaded files
+  const [transcript, setTranscript] = useState(""); // New state for transcript
   const footerRef = useRef(null);
   const middleBoxRef = useRef(null); // New ref for middle box
   const bottomBoxRef = useRef(null); // New ref for bottom box
@@ -33,7 +33,9 @@ export default function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (currentIndex < wordsArray.length) {
-        setDisplayText((prevText) => prevText + " " + wordsArray[currentIndex]);
+        const newWord = wordsArray[currentIndex];
+        setDisplayText((prevText) => prevText + " " + newWord);
+        setTranscript((prevTranscript) => prevTranscript + " " + newWord);
         currentIndex++;
       } else {
         clearInterval(interval);
@@ -147,6 +149,15 @@ export default function App() {
     }
   };
 
+  const downloadTranscript = () => {
+    const element = document.createElement("a");
+    const file = new Blob([transcript], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = "transcript.txt";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  };
+
   return (
     <div className="App">
       <div className="main-wrapper">
@@ -173,9 +184,14 @@ export default function App() {
                       <p>{displayText}</p>
                     )}
                   </div>
-                  <button className="expand-button" onClick={toggleExpand}>
-                    {isExpanded ? "Collapse" : "View Transcript"}
-                  </button>
+                  <div className="transcript-buttons">
+                    <button className="expand-button" onClick={toggleExpand} style={{ flex: 1 }}>
+                      {isExpanded ? "Collapse" : "View Transcript"}
+                    </button>
+                    <button className="download-button" onClick={downloadTranscript}>
+                      <FaDownload />
+                    </button>
+                  </div>
                   {isExpanded && (
                     <div className="expanded-content">
                       {wordsArray.map((line, index) => (
@@ -201,6 +217,9 @@ export default function App() {
                       ))}
                     </ul>
                     <button>Start Presenting</button>
+                    <button className="download-button" onClick={downloadTranscript}>
+                      <FaDownload />
+                    </button>
                   </div>
                 </div>
               </>
