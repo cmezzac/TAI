@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 import openAi from "./openAi.js"
 
-const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus } = openAi;
+const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepTxtFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus } = openAi;
 
 import mongoRouter from "./mongo_router.js"; // Import the router
 
@@ -32,7 +32,7 @@ mongoose
 let vectorStore = await getOrCreateVectorStore();
 console.log("This is the vector store object: ", vectorStore, "\n");
 
-const fileId = await prepFiles("test.txt");
+const fileId = await prepTxtFiles("test.txt");
 await addFileToVectorStoreFiles(vectorStore.id, fileId);
 
 const {assistant, thread} = await initOpenAi(vectorStore.id);

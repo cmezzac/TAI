@@ -28,7 +28,7 @@ async function initOpenAi(vectorStoreId) {
 }
 
 
-async function prepFiles(filePath, purpose="assistants") {
+async function prepTxtFiles(filePath, purpose="assistants") {
     const file = await openai.files.create({
         file: fs.createReadStream("test.txt"),
         purpose: purpose,
@@ -36,6 +36,16 @@ async function prepFiles(filePath, purpose="assistants") {
 
     console.log('File Uploaded:', file);
     return file.id;
+}
+
+async function prepFiles(fileBuffer, purpose="assistants") {
+  const file = await openai.files.create({
+      file: fileBuffer,
+      purpose: purpose,
+  });
+
+  console.log('File Uploaded:', file);
+  return file.id;
 }
 
 async function makeThreadMessage(content, threadId) {
@@ -77,5 +87,5 @@ async function addFileToVectorStoreFiles(vectorStoreId, fileId) {
   const files = await openai.beta.vectorStores.files.list(vectorStoreId);
 }
 
-export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus}
+export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepTxtFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus}
 
