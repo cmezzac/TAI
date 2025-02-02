@@ -1,6 +1,10 @@
 import express from 'express';
 import FileId from './schemas/FileId.js' // Make sure the path is correct
 import PdfFile from './schemas/Pdf.js';
+import fs from 'fs';
+import openAi from "./openAi.js"
+
+const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage } = openAi;
 
 const router = express.Router();
 
@@ -18,8 +22,22 @@ router.post("/addFileId", async (req, res) => {
 router.post("/addPdf" , async (req,res)=> {
   try{
     const pdfFile = new PdfFile(req.body);
+    const pdfBuffer = Buffer.from(base64Data, 'base64');
+    await prepFiles(pdfBuffer);
     
     await pdfFile.save();
+    
+    res.status(201).json({message:"Success Bello"});
+  }
+  catch(error){
+    res.status(400).json({ message: "Error adding item", error });
+  }
+});
+
+
+router.post("/prompt" , async (req,res)=> {
+  try{
+    const prompt = req.body;
     
     res.status(201).json({message:"Success Bello"});
   }

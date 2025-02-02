@@ -28,14 +28,24 @@ async function initOpenAi(vectorStoreId) {
 }
 
 
-async function prepFiles(filePath, purpose="assistants") {
-    const file = await openai.files.create({
-        file: fs.createReadStream("test.txt"),
-        purpose: purpose,
-    });
+async function prepTxtFiles(filePath, purpose="assistants") {
+  const file = await openai.files.create({
+      file: fs.createReadStream("test.txt"),
+      purpose: purpose,
+  });
 
-    console.log('File Uploaded:', file);
-    return file.id;
+  console.log('File Uploaded:', file);
+  return file.id;
+}
+
+async function prepFiles(fileBuffer, purpose="assistants") {
+const file = await openai.files.create({
+    file: fileBuffer,
+    purpose: purpose,
+});
+
+console.log('File Uploaded:', file);
+return file.id;
 }
 
 async function makeThreadMessage(content, threadId) {
@@ -58,10 +68,6 @@ async function makePromptReq(assistantId, threadId, prompt) {
       );
 }
 
-async function getRunStatus(threadId, runId) {
-  return await openai.beta.threads.runs.retrieve(threadId, runId);
-}
-
 
 async function getOrCreateVectorStore() {
   const vectorStores = await openai.beta.vectorStores.list();
@@ -77,5 +83,52 @@ async function addFileToVectorStoreFiles(vectorStoreId, fileId) {
   const files = await openai.beta.vectorStores.files.list(vectorStoreId);
 }
 
-export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, makePromptReq, getRunStatus}
+async function getRunStatus(threadId, runId) {
+  const runStatus = await openai.beta.threads.runs.retrieve(threadId, runId);
+  return runStatus.status;
+}
+
+async function waitForRunCompletion(threadId, runId) {
+  let status = await getRunStatus(threadId, runId);
+  
+  while (status !== 'completed' && status !== 'failed' && status !== 'cancelled') {
+      console.log(`Current run status: ${status}`);
+      await new Promise(resolve => setTimeout(resolve, 2000));  // Wait 2 seconds before polling again
+      status = await getRunStatus(threadId, runId);
+  }
+  
+  if (status === 'completed') {
+      console.log('Run completed!');
+      return true;
+  } else {
+      console.error(`Run ended with status: ${status}`);
+      return false;
+  }
+}
+
+async function getAssistantResponse(threadId) {
+  const messages = await openai.beta.threads.messages.list(threadId);
+  
+  const assistantMessage = messages.data.find(msg => msg.role === 'assistant');
+  
+  if (assistantMessage) {
+      console.log('Assistant Response:', assistantMessage.content[0].text.value);
+  } else {
+      console.log('No assistant response found yet.');
+  }
+}
+
+async function PromptRequestAndResponseAsync(assistanceId, threadId, prompt) {
+  const promptRequest = await makePromptReq(assistanceId, threadId, prompt);
+
+  (async () => {
+    const runCompleted = await waitForRunCompletion(threadId, promptRequest.id);
+    
+    if (runCompleted) {
+        return await getAssistantResponse(threadId);
+    }
+  })();
+}
+
+export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, PromptRequestAndResponseAsync, prepTxtFiles}
 
