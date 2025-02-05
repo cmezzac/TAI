@@ -1,13 +1,8 @@
 import express from "express";
-import mongoose from "mongoose";
-import VectorStoreId from "./schemas/VectorStore.js"
 import cors from "cors";
 import dotenv from "dotenv";
 
-import openAi from "./services/openAi.js"
-
-const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, PromptRequestAndResponseAsync, prepTxtFiles } = openAi;
-
+import mongoDb from "./services/mongoDb";
 import mongoRouter from "./mongo_router.js"; // Import the router
 
 
@@ -20,6 +15,8 @@ app.use(cors());
 
 const PORT = process.env.PORT || 5001;
 
+await mongoDb();
+
 // Use the Mongo router for API routes
 app.use("/api", mongoRouter);
 
@@ -29,10 +26,3 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-
-
-
-//Setup openAI
-async () => {
-  
-};

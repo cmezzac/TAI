@@ -1,7 +1,4 @@
-import express from "express";
 import mongoose from "mongoose";
-import VectorStoreId from "../schemas/VectorStore.js"
-import cors from "cors";
 import dotenv from "dotenv";
 
 dotenv.config();

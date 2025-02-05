@@ -10,7 +10,7 @@ const openai = new OpenAI({
 });
 
 
-const InitVectorStore = async (feature) => {
+const GetVectorStore = async (feature) => {
   try {
     const vectorStoreDoc = await VectorStoreId.findOne({ feature });
 
