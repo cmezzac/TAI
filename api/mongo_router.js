@@ -2,11 +2,16 @@ import express from 'express';
 import FileId from './schemas/FileId.js' // Make sure the path is correct
 import PdfFile from './schemas/Pdf.js';
 import fs, { copyFileSync } from 'fs';
-import openAi from "./openAi.js"
+import openAi from "./services/openAi.js"
 
-const { initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage,PromptRequestAndResponseAsync,getSimplePromptResponse } = openAi;
+const { initOpenAi, getOrCreateVectorStore, updateVectorStoreFileIds, prepFiles, makeThreadMessage,PromptRequestAndResponseAsync,getSimplePromptResponse } = openAi;
 
 const router = express.Router();
+
+const threadId = "thread_xbwwV696PkcoYxEKMEmVTgar";
+const assistId = "asst_td6TM4zF3SuhMlYB58QHbhCn"
+const vsId = "vs_29ORI9AGRPlk2wXyx9p2URsk";
+
 
 router.post("/addFileId", async (req, res) => {
   try {
@@ -23,7 +28,9 @@ router.post("/addPdf" , async (req,res)=> {
   try{
     const pdfFile = new PdfFile(req.body);
     const pdfBuffer = Buffer.from(base64Data, 'base64');
-    await prepFiles(pdfBuffer);
+    
+    const fileId = await prepFiles(pdfBuffer);
+    await updateVectorStoreFileIds(vsId, fileId);
     
     await pdfFile.save();
     
@@ -36,6 +43,21 @@ router.post("/addPdf" , async (req,res)=> {
 
 
 router.get("/prompt", async (req, res) => {
+  try {
+
+    const prompt = req.query.prompt;
+    const response = await PromptRequestAndResponseAsync(assistId, threadId, prompt);
+    
+    
+
+    res.status(200).json({ message: "Success Bello", body: response });
+  } catch (error) {
+    console.error("Error:", error.message);  // Log the error message for debugging
+    res.status(400).json({ message: "Error adding item", error: error.message });
+  }
+});
+
+router.get("/simpleprompt", async (req, res) => {
   try {
     const prompt = req.query.prompt; // Access query parameter
     console.log("Received prompt:", prompt);

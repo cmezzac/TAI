@@ -2,19 +2,39 @@
 import OpenAI from "openai";
 import fs from "fs";
 import dotenv from 'dotenv';
+import VectorStoreId from "../schemas/VectorStore"
 dotenv.config();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-let thread, assistant;
+
+const InitVectorStore = async (feature) => {
+  try {
+    const vectorStoreDoc = await VectorStoreId.findOne({ feature });
+
+    if (!vectorStoreDoc) {
+      throw new Error(`VectorStore for feature "${feature}" not found.`);
+    }
+
+    return await openai.beta.vectorStores.retrieve(vectorStoreDoc.storeId);
+
+  } catch (error) {
+    console.error('Error initializing Vector Store:', error);
+    throw error;  // Re-throw to let the caller handle it if needed
+  }
+};
+
+
 
 async function initOpenAi(vectorStoreId) {
-  assistant = await openai.beta.assistants.create({
+  const AiInstructions = "You are a teacher assistant chatbot. Use your knowledge base to respond to queries. You can also use your pre-existsing insight and knowledge to help students with questions";
+
+  const assistant = await openai.beta.assistants.create({
     name: 'TAI Chatbot',
     model: 'gpt-4o-mini',
-    instructions: "You are a teacher assistant chatbot. Use your knowledge base to respond to queries. You can also use your pre-existsing insight and knowledge to help students with questions",
+    instructions: AiInstructions,
     tools: [{ type: 'file_search' }],
     tool_resources: {
         file_search: {
@@ -23,7 +43,7 @@ async function initOpenAi(vectorStoreId) {
     }
 });
 
-  thread = await openai.beta.threads.create();
+  const thread = await openai.beta.threads.create();
   console.log("This is the thread object: ", thread, "\n");
 
   return {assistant, thread};
@@ -34,7 +54,7 @@ async function getSimplePromptResponse(prompt) {
     const response = await openai.chat.completions.create({
       model: "gpt-4", // You can use "gpt-4", "gpt-4o", or "gpt-3.5-turbo"
       messages: [
-        { role: "system", content: "You are a helpful assistant. Give me a 20 word max response" },  // Optional system message
+        { role: "system", content: "You are a helpful assistant. Give me a 50 word max response" },  // Optional system message
         { role: "user", content: prompt },                           // User prompt
       ],
     });
@@ -59,21 +79,21 @@ async function prepTxtFiles(filePath, purpose="assistants") {
 }
 
 async function prepFiles(fileBuffer, purpose="assistants") {
-const file = await openai.files.create({
-    file: fileBuffer,
-    purpose: purpose,
-});
+  const file = await openai.files.create({
+      file: fileBuffer,
+      purpose: purpose,
+  });
 
-console.log('File Uploaded:', file);
-return file.id;
+  console.log('File Uploaded:', file);
+  return file.id;
 }
 
-async function makeThreadMessage(content, threadId) {
+async function makeThreadMessage(threadId) {
     return await openai.beta.threads.messages.create(
         (threadId = threadId),
         {
           role: "user",
-          content: content,
+          content: "",
         }
     );
 }
@@ -92,7 +112,7 @@ async function makePromptReq(assistantId, threadId, prompt) {
 async function getOrCreateVectorStore() {
   const vectorStores = await openai.beta.vectorStores.list();
   console.log('Vector Stores:', vectorStores);
-  return (vectorStores.data.length === 0) ? await openai.beta.vectorStores.create({ name: 'TAI_Vector_Store' })
+  return (vectorStores.data.length === 0) ? await openai.beta.vectorStores.create({ name: 'TAi_Vector_Store' })
                                           : await openai.beta.vectorStores.retrieve(vectorStores.data[0].id);
 }
 
@@ -101,6 +121,19 @@ async function addFileToVectorStoreFiles(vectorStoreId, fileId) {
     file_id: fileId
   });
   const files = await openai.beta.vectorStores.files.list(vectorStoreId);
+}
+
+async function updateVectorStoreFileIds(vectorStoreId, newFileIds) {
+  try {
+      // Update the vector store with new file IDs
+      const response = await openai.beta.vectorStores.update(vectorStoreId, {
+          file_ids: newFileIds
+      });
+
+      console.log('Vector Store Updated:', response);
+  } catch (error) {
+      console.error('Error updating vector store:', error);
+  }
 }
 
 async function getRunStatus(threadId, runId) {
@@ -139,16 +172,10 @@ async function getAssistantResponse(threadId) {
 }
 
 async function PromptRequestAndResponseAsync(assistanceId=assistant.id, threadId=thread.id, prompt) {
-
-  console.log("assistId: "+assistanceId, " threadId: "+ threadId);
-  console.log("inside 0");
   const promptRequest = await makePromptReq(assistanceId, threadId, prompt);
-
-  console.log("inside 1");
-
+  
   (async () => {
     const runCompleted = await waitForRunCompletion(threadId, promptRequest.id);
-    console.log("inside 2");
     
     if (runCompleted) {
       console.log("inside 3");
@@ -157,5 +184,5 @@ async function PromptRequestAndResponseAsync(assistanceId=assistant.id, threadId
   })();
 }
 
-export default {initOpenAi, getOrCreateVectorStore, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, PromptRequestAndResponseAsync, prepTxtFiles,getSimplePromptResponse}
+export default {initOpenAi, getOrCreateVectorStore, updateVectorStoreFileIds, addFileToVectorStoreFiles, prepFiles, makeThreadMessage, PromptRequestAndResponseAsync, prepTxtFiles,getSimplePromptResponse}
 
