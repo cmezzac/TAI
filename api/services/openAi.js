@@ -1,4 +1,3 @@
-
 import OpenAI from "openai";
 import fs from "fs";
 import dotenv from 'dotenv';

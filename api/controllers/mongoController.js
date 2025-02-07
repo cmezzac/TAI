@@ -24,16 +24,12 @@ export const uploadFile = async (res, req) => {
 	const readStream = fs.createReadStream(data.filePath);
 	const writeStream = gfs.createWriteStream({
 		filename: fileName,
-			//metadata: { uploadedBy: 'John Doe', uploadDate: new Date() }
+			//metadata: { uploadedBy: 'John Doe', uploadDate: new Date() },
 	});
 
 	readStream.pipe(writeStream)
 		  .on('error', (err) => console.error(`Upload failed for ${fileName}:`, err))
 		  .on('close', (file) => console.log(`File "${file.filename}" uploaded successfully!`));
-
-	res.body = {
-
-	}
 };
 
 

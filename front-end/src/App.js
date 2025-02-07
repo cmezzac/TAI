@@ -87,7 +87,7 @@ export default function App() {
       const response = await fetch(`http://localhost:5001/api/prompt?prompt=${encodeURIComponent(prompt)}`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'  // This header is optional for GET requests
+            'Content-Type': 'application/json' // This header is optional for GET requests
         }
     });
     

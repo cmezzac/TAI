@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import mongoDb from "./services/mongoDb";
 import mongoRouter from "./mongo_router.js"; // Import the router
+import openai from "./services/openAi"
 
 
 console.log('Starting server...');
