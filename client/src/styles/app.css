@@ -53,6 +53,7 @@
   }
 
   .app-content {
+	padding-top: 5vh;
 	display: flex;
 	flex-direction: row;
   }
