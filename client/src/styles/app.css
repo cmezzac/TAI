@@ -50,10 +50,18 @@
 	flex-direction: column;
 	min-width: 100%;
 	min-height: 100%;
+	gap: 10px;
   }
 
   .app-content {
-	padding-top: 5vh;
+	padding-top: 7vh;
 	display: flex;
 	flex-direction: row;
+	height: 93vh;
+	width: 100%;
+  }
+
+
+  .left-content {
+	width: 70%;
   }

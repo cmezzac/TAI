@@ -1,15 +1,16 @@
 import express from "express";
-import multer from "multer";
-
-import { uploadFile, downloadFile } from "./controllers/apiController.js";
-//import { uploadFile, downloadFile } from "../controllers/mongoController.js";
+import multer, { memoryStorage } from "multer"
+import uploadFile from "../controllers/apiControllers.js"
 
 const router = express.Router();
+
 const upload = multer({ storage: multer.memoryStorage() });
 
 //POST
-router.post("upload", uploadFile);
+router.post("/upload", upload.single("file"), uploadFile);
 
 
 //GET
-router.get("download", downloadFile);l
+//router.get("/download", downloadFile);
+
+export default router;

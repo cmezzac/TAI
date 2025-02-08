@@ -11,7 +11,8 @@ import FileHandler from './components/FileHandler'
 import './styles/app.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const [selctedFiles, setSelectFiles] = useState([]);
 
   return (
     <>
@@ -19,7 +20,7 @@ function App() {
         <Navbar />
         <div className="app-content">
           <div className='left-content'>
-            <FileHandler />
+            <FileHandler onFileSelect={setSelectFiles}/>
             <FileViewer />
             <Transcript />
           </div>

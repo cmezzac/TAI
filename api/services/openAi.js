@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import fs from "fs";
 import dotenv from 'dotenv';
-import VectorStoreId from "../schemas/VectorStore"
+import VectorStoreId from "../schemas/VectorStore.js"
 dotenv.config();
 
 const openai = new OpenAI({

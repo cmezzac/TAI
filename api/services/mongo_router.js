@@ -1,9 +1,8 @@
 import express from 'express';
-import FileId from './schemas/FileId.js' // Make sure the path is correct
-import PdfFile from './schemas/Pdf.js';
+import FileId from '../schemas/FileId.js';
+import PdfFile from '../schemas/Pdf.js';
 import fs, { copyFileSync } from 'fs';
-import openAi from "./services/openAi.js"
-
+import openAi from "../services/openAi.js"
 const { initOpenAi, getOrCreateVectorStore, updateVectorStoreFileIds, prepFiles, makeThreadMessage,PromptRequestAndResponseAsync,getSimplePromptResponse } = openAi;
 
 const router = express.Router();

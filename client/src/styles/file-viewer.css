@@ -1,3 +1,12 @@
-/* .fileviewer-container {
+.fileviewer-wrapper {
+	display: flex;
+	justify-content: center;
+	height: 70%;
+}
+
+.fileviewer {
 	width: 100%;
-} */
+	height: 100%;
+
+	border-radius: 10px;
+}

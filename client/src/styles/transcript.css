@@ -1,5 +1,11 @@
-/* .transcript-container {
-	height: 10%;
+.transcript-wrapper {
+	display: flex;
+	height: 20%;
 	width: 100%;
 	background-color: blue;
-} */
+}
+
+.transcript {
+	width: 100%;
+	height: 100%;
+}

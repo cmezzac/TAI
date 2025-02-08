@@ -3,8 +3,10 @@ import '../styles/transcript.css';
 
 const Transcript = () => {
   return (
-    <div className="transcript-container">
-		Transcript
+    <div className="transcript-wrapper">
+		  <div className="transcript">
+		    Transcript
+      </div>
     </div>
   );
 };

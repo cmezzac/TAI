@@ -2,9 +2,10 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import mongoDb from "./services/mongoDb";
-import mongoRouter from "./mongo_router.js"; // Import the router
-import openai from "./services/openAi"
+import mongoDb from "./services/mongoDb.js";
+import mongoRouter from "./services/mongo_router.js";
+import router from "./routes/routes.js"
+import openai from "./services/openAi.js"
 
 
 console.log('Starting server...');
@@ -19,7 +20,7 @@ const PORT = process.env.PORT || 5001;
 await mongoDb();
 
 // Use the Mongo router for API routes
-app.use("/api", mongoRouter);
+app.use("/api", router);
 
 // Sample root route
 app.get("/", (req, res) => {

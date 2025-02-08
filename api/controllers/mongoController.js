@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import Grid from 'gridfs-stream'
+import crypto from 'crypto'
 import fs from 'fs'
 
 //function to upload files to mongoDb
@@ -24,7 +25,11 @@ export const uploadFile = async (res, req) => {
 	const readStream = fs.createReadStream(data.filePath);
 	const writeStream = gfs.createWriteStream({
 		filename: fileName,
-			//metadata: { uploadedBy: 'John Doe', uploadDate: new Date() },
+		//metadata: { 
+ 		//		uploadedBy: 'John Doe', 
+		//		uploadDate: new Date(),
+		//		 
+		// },
 	});
 
 	readStream.pipe(writeStream)
