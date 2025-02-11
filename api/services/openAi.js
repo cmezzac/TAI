@@ -21,7 +21,17 @@ const GetVectorStore = async (feature) => {
 
   } catch (error) {
     console.error('Error initializing Vector Store:', error);
-    throw error;  // Re-throw to let the caller handle it if needed
+    throw error;
+  }
+};
+
+const CreateVectorStore = async (vectorStoreName) => {
+  try {
+    const vectorStore = await openai.beta.vectorStores.create({name: vectorStoreName});
+    return vectorStore.id;
+  } catch (error) {
+    console.error('Error creating new Vector Store:', error);
+    throw error;
   }
 };
 
@@ -32,7 +42,7 @@ async function initOpenAi(vectorStoreId) {
 
   const assistant = await openai.beta.assistants.create({
     name: 'TAI Chatbot',
-    model: 'gpt-4o-mini',
+    model: 'gpt-4o',
     instructions: AiInstructions,
     tools: [{ type: 'file_search' }],
     tool_resources: {

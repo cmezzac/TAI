@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
 import Grid from 'gridfs-stream'
-import crypto from 'crypto'
+import {createHash} from 'crypto'
 import fs from 'fs'
 
 //function to upload files to mongoDb
-export const uploadFile = async (res, req) => {
+export const uploadFileToMongo = async (req, res) => {
 	const db = mongoose.connection;
 	let gfs;
 
@@ -19,17 +19,19 @@ export const uploadFile = async (res, req) => {
 	}
 	console.log('GridFS initialization: successful.')
 	
-	const data = req.body;
-	const fileName = data.fileName
+	const fileName = dataform.originalname;
+	const sha256Hash = createHash('sha256').update(res.buffer).digest('base64');
 	
 	const readStream = fs.createReadStream(data.filePath);
 	const writeStream = gfs.createWriteStream({
 		filename: fileName,
-		//metadata: { 
- 		//		uploadedBy: 'John Doe', 
-		//		uploadDate: new Date(),
-		//		 
-		// },
+		metadata: { 
+			uploadedBy: 'John Doe',
+			uploadDate: new Date(),
+			hash: sha256Hash,
+			filetype: dataform.mimetype,
+			encoding: dataform.encoding,
+		},
 	});
 
 	readStream.pipe(writeStream)
