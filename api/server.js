@@ -1,13 +1,11 @@
 import express from "express";
+import http from "http"
 import cors from "cors";
 import dotenv from "dotenv";
-import ws from "ws"
+import {WebSocketServer} from "ws"
 
 import mongoDb from "./services/mongoDb.js";
-import mongoRouter from "./services/mongo_router.js";
 import router from "./routes/routes.js"
-import openai from "./services/openAi.js"
-
 
 console.log('Starting server...');
 dotenv.config();
@@ -16,9 +14,28 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = process.env.PORT || 5001;
-
 await mongoDb();
+
+
+const server = http.createServer(app);
+const wss = new WebSocketServer({server});
+
+wss.on('connection', (ws) => {
+  console.log('New WebSocket connection');
+
+  ws.on('message', (message) => {
+      console.log(`Received: ${message}`);
+      try {
+        const data = JSON.parse(message);
+        ws.send(`${data.payload}`);
+      } catch {
+        ws.send(JSON.stringify({type:'message', payload:"Echo: "+ message}));
+      }
+  });
+
+  ws.on('close', () => console.log('WebSocket disconnected'));
+});
+
 
 // Use the Mongo router for API routes
 app.use("/api", router);
@@ -29,11 +46,5 @@ app.get("/", (req, res) => {
 });
 
 
-const httpServer = app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-const wsServer = new ws.Server({ noServer: true });
-
-httpServer.on('upgrade', (req, socket, head) => {
-  wsServer.handleUpgrade(req, socket, head, (ws) => {
-    wsServer.emit('connection', ws, req)
-  });
-});
+const PORT = process.env.PORT || 5001;
+const httpServer = server.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

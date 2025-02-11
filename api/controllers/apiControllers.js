@@ -1,4 +1,3 @@
-import { uploadFileToMongo } from "../utils/mongoUtils";
 
 const uploadFile = async (req, res) => {
     let formData = req.file;
