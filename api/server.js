@@ -27,9 +27,10 @@ wss.on('connection', (ws) => {
       console.log(`Received: ${message}`);
       try {
         const data = JSON.parse(message);
-        ws.send(`${data.payload}`);
+        ws.send(message);
       } catch {
-        ws.send(JSON.stringify({type:'message', payload:"Echo: "+ message}));
+        ws.send(JSON.parse({type:'message', payload: message}));
+        console.log(`error: ${message}`);
       }
   });
 
