@@ -2,7 +2,7 @@ import React from 'react';
 
 import '../styles/ai-chat.css'
 
-const AiChat = () => {
+function AiChat() {
 	return (
 		<div className="aichat-wrapper">
 			<div className="aichat">

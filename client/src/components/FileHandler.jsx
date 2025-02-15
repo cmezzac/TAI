@@ -3,7 +3,7 @@ import { handleDragOver, handleDragLeave, handleDrop, handleFileChange, handleCl
 import '../styles/file-handler.css'
 import UploadIcon from "../assets/upload-file.svg?react";
 
-const FileHandler = ({ onFileSelect }) => {
+function FileHandler({ onFileSelect }) {
 	const [dragging, setDragging] = useState(false);
 	const [uploading, setUploadStatus] = useState(null);
 	const fileInputRef = useRef(null);

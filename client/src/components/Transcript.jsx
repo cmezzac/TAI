@@ -1,8 +1,9 @@
 import React, {useEffect, useState, useRef} from 'react';
-import WebSocketInstance from '../utils/webSocketService';
+import WebSocketInstance from '../utils/webSocketService.js';
+import TranscriptAudio from '../components/subcomponents/transcriptAudio.jsx'
 import '../styles/transcript.css';
 
-const Transcript = () => {
+function Transcript() {
   const [value, setValue] = useState("");
 
   const handleOnChange = (e) => {
@@ -21,7 +22,7 @@ const Transcript = () => {
   return (
     <div className="transcript-wrapper">
 		  <div className="transcript">
-		    Transcript
+        <TranscriptAudio />
         <input id="input-box" type="text" onChange={handleOnChange}/>
         <div id="listener-box" type="text">Hello</div>
       </div>

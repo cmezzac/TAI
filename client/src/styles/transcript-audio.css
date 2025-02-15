@@ -1,0 +1,43 @@
+/* select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    outline: none;
+    background: none;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: none;
+} */
+  
+
+.audio-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: aqua;
+}
+
+.button-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.button-wrapper > button {
+    height: 30px;
+    padding: 0;
+    width: 30px;
+    border: none;
+}
+
+
+
+.button-icon {
+    stroke: white;
+    max-width: 100%;
+    max-height: 100%;
+}

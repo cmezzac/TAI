@@ -2,7 +2,7 @@ import React from 'react'
 
 import '../styles/file-viewer.css'
 
-const FileViewer = () => {
+function FileViewer() {
 	return (
 		<div className="fileviewer-wrapper">
 			<div className="fileviewer">
