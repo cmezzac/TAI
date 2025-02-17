@@ -6,6 +6,7 @@ import {WebSocketServer} from "ws"
 
 import mongoDb from "./services/mongoDb.js";
 import router from "./routes/routes.js"
+import { SimpleTest } from "./services/aws.js";
 
 console.log('Starting server...');
 dotenv.config();
@@ -45,6 +46,8 @@ app.use("/api", router);
 app.get("/", (req, res) => {
   res.send("🚀 API is running...");
 });
+
+await SimpleTest();
 
 
 const PORT = process.env.PORT || 5001;
